@@ -17,13 +17,15 @@ import CategoriesPage from './pages/CategoriesPage.jsx';
 import DescriptionPage from './pages/DescriptionPage.jsx';
 
 
+import { BACKEND_URL } from './config.js';
+
 const App = () => {
   const dispatch = useDispatch();
   useEffect(() => {
       const fetch = async() => {
         try {
-          const res = await axios.get("http://localhost:1000/api/v1/check-cookie", {withCredentials: true});
-          if (res.data.message == true){
+          const res = await axios.get(`${BACKEND_URL}/api/v1/check-cookie`, {withCredentials: true});
+          if (res.data.message === "true"){
             dispatch(authActions.login());
           }
         } catch (error) {

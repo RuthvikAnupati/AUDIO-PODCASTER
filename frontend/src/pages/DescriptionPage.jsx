@@ -1,13 +1,14 @@
 import React, {useState , useEffect} from 'react';
 import { useParams } from 'react-router-dom';
 import axios from "axios";
+import { BACKEND_URL } from '../config.js';
 
 const DescriptionPage = () => {
     const {id} = useParams();
     const [Podcasts, setPodcasts] = useState();
     useEffect(() => {
         const fetch = async() => {
-            const res = await axios.get(`http://localhost:1000/api/v1/get-podcast/${id}`, 
+            const res = await axios.get(`${BACKEND_URL}/api/v1/get-podcast/${id}`, 
                 {withCredentials:true});
             setPodcasts(res.data.data);
         };
@@ -18,7 +19,7 @@ const DescriptionPage = () => {
         {Podcasts && (
             <>
             <div className='w-2/6 flex items-center justify-center md:justify-start md:items-start'>
-                <img src={`http://localhost:1000/${Podcasts.frontImage}`} alt="/" 
+                <img src={`${BACKEND_URL}/${Podcasts.frontImage}`} alt="/" 
                 className='rounded w-full h-[50vh] object-cover'/>
             </div>
             <div className="w-4/6 ">

@@ -6,6 +6,7 @@ import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 import { authActions } from '../store/auth';
 import ErrorPage from './ErrorPage';
+import { BACKEND_URL } from '../config.js';
 
 const Login = () => {
     const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
@@ -22,7 +23,7 @@ const Login = () => {
     };
     const handleSubmit = async () => {
         try {
-            const res = await axios.post("http://localhost:1000/api/v1/sign-in", Values, {withCredentials:true});
+            const res = await axios.post(`${BACKEND_URL}/api/v1/sign-in`, Values, {withCredentials:true});
             dispatch(authActions.login());
             // console.log(res.data);
             navigate("/profile");

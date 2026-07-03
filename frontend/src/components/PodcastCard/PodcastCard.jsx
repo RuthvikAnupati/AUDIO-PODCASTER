@@ -2,6 +2,7 @@ import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { playerActions } from '../../store/player';
+import { BACKEND_URL } from '../../config.js';
 
 const PodcastCard = ({ items }) => {
     const dispatch = useDispatch();
@@ -11,8 +12,8 @@ const PodcastCard = ({ items }) => {
         if (isLoggedIn) {
             e.preventDefault();
             dispatch(playerActions.setDiv());
-            dispatch(playerActions.changeImage(`http://localhost:1000/${items.frontImage}`));
-            dispatch(playerActions.changeSong(`http://localhost:1000/${items.audioFile}`));
+            dispatch(playerActions.changeImage(`${BACKEND_URL}/${items.frontImage}`));
+            dispatch(playerActions.changeSong(`${BACKEND_URL}/${items.audioFile}`));
         }
     };
 
@@ -21,7 +22,7 @@ const PodcastCard = ({ items }) => {
             <Link to={`/description/${items._id}`} 
                 className='border p-4 rounded flex flex-col shadow-xl hover:shadow-2xl transition-all duration-300'>
                 <div>
-                    <img src={`http://localhost:1000/${items.frontImage}`} className='rounded size-[42vh] object-cover'/>
+                    <img src={`${BACKEND_URL}/${items.frontImage}`} className='rounded size-[42vh] object-cover'/>
                 </div>
                 <div className="mt-2 text-xl font-bold">
                     {items.title.length > 20 ? `${items.title.slice(0, 20)}...` : items.title}

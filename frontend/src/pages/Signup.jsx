@@ -5,6 +5,7 @@ import 'react-toastify/dist/ReactToastify.min.css';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
 import ErrorPage from './ErrorPage';
+import { BACKEND_URL } from '../config.js';
 
 const Signup = () => { 
     const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
@@ -22,7 +23,7 @@ const Signup = () => {
 
     const handleSubmit = async () => {
         try {
-            const res = await axios.post("http://localhost:1000/api/v1/sign-up", Values);
+            const res = await axios.post(`${BACKEND_URL}/api/v1/sign-up`, Values);
             navigate("/login");
         } catch (error) {
             toast.error(error.response.data.message);

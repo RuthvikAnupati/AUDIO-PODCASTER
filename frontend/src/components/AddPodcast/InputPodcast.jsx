@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import {toast , ToastContainer} from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
+import { BACKEND_URL } from '../../config.js';
 
 const InputPodcast = () => {
     const [frontImage, setfrontImage] = useState(null);
@@ -56,7 +57,7 @@ const InputPodcast = () => {
         data.append("audioFile", audioFile);
         try {
             const res = await axios.post(
-                "http://localhost:1000/api/v1/add-podcast", 
+                `${BACKEND_URL}/api/v1/add-podcast`, 
                 data ,{headers:{"Content-Type":"multipart/form-data",
                 }, withCredentials:true,
             });

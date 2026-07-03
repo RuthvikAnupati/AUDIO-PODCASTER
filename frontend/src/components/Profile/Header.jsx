@@ -3,6 +3,7 @@ import axios from "axios";
 import { authActions } from '../../store/auth';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { BACKEND_URL } from '../../config.js';
 
 const Header = () => {
     const [UserData, setUserData] = useState();
@@ -10,14 +11,14 @@ const Header = () => {
     const navigate = useNavigate();
     useEffect(() => {
         const fetchUserDetails = async () => {
-            const res = await axios.get("http://localhost:1000/api/v1/user-details", {withCredentials:true,});
+            const res = await axios.get(`${BACKEND_URL}/api/v1/user-details`, {withCredentials:true,});
             setUserData(res.data.user);
         }
         fetchUserDetails();
     }, [])
 
     const LogOutHandler = async () => {
-        const res = await axios.post("http://localhost:1000/api/v1/logout", {withCredentials:true,});
+        const res = await axios.post(`${BACKEND_URL}/api/v1/logout`, {withCredentials:true,});
         // console.log(res);
         dispatch(authActions.logout());
         navigate("/")
