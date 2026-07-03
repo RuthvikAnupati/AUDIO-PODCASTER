@@ -10,6 +10,11 @@ const cors = require("cors");
 require("dotenv").config(); // Load environment variables from a .env file.
 require("./conn/conn"); // Establish a connection to the database.
 
+const fs = require("fs");
+if (!fs.existsSync("uploads")) {
+    fs.mkdirSync("uploads");
+}
+
 app.use(cors({  // Set up CORS with specific origin and credentials.
     origin: [process.env.FRONTEND_URL || "http://localhost:5173"],
     credentials:true,
