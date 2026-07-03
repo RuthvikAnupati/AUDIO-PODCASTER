@@ -11,7 +11,7 @@ require("dotenv").config(); // Load environment variables from a .env file.
 require("./conn/conn"); // Establish a connection to the database.
 
 app.use(cors({  // Set up CORS with specific origin and credentials.
-    origin: ["http://localhost:5173"],
+    origin: [process.env.FRONTEND_URL || "http://localhost:5173"],
     credentials:true,
 }));
 app.use(express.json());  // Enable parsing of incoming JSON requests.
