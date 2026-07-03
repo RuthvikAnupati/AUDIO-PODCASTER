@@ -4,30 +4,64 @@ const Category = require("../models/category");
 const User = require("../models/user");
 const Podcast = require("../models/podcasts");
 const router = require("express").Router();
+const cloudinary = require("cloudinary").v2;
+const fs = require("fs");
+
+// Configure Cloudinary
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET
+});
 
 //add-podcast
 router.post("/add-podcast", authMiddleware, upload , async (req,res) => {
     try {
         const {title , description , category} = req.body;
-        const frontImage = req.files["frontImage"] [0].path;
-        const audioFile = req.files["audioFile"] [0].path;
-        if(!title || !description || !category || !frontImage || !audioFile) {
+        
+        if (!req.files || !req.files["frontImage"] || !req.files["audioFile"]) {
+            return res.status(400).json({ message : "Both Image and Audio files are required"});
+        }
+
+        const frontImagePath = req.files["frontImage"][0].path;
+        const audioFilePath = req.files["audioFile"][0].path;
+        
+        if(!title || !description || !category) {
+            if (fs.existsSync(frontImagePath)) fs.unlinkSync(frontImagePath);
+            if (fs.existsSync(audioFilePath)) fs.unlinkSync(audioFilePath);
             return res.status(400).json({ message : "All fields are Required "});
         }    
     
         const {user}=req;
         const cat = await Category.findOne ({categoryName : category });
         if(!cat){
-        return res.status(400).json({ message : "No category found"});
+            if (fs.existsSync(frontImagePath)) fs.unlinkSync(frontImagePath);
+            if (fs.existsSync(audioFilePath)) fs.unlinkSync(audioFilePath);
+            return res.status(400).json({ message : "No category found"});
         }
+
+        // Upload to Cloudinary
+        const imageResult = await cloudinary.uploader.upload(frontImagePath, {
+            folder: "podcaster/images"
+        });
+
+        const audioResult = await cloudinary.uploader.upload(audioFilePath, {
+            folder: "podcaster/audio",
+            resource_type: "video" // Required for audio
+        });
+
+        // Clean up temporary local files
+        if (fs.existsSync(frontImagePath)) fs.unlinkSync(frontImagePath);
+        if (fs.existsSync(audioFilePath)) fs.unlinkSync(audioFilePath);
+
         const catid = cat._id;
         const userid = user.id;
         const newPodcast = new Podcast({ 
             title , 
             description , 
             category: catid , 
-            frontImage, 
-            audioFile , 
+            frontImage: imageResult.secure_url, 
+            audioFile: audioResult.secure_url, 
             user: userid,
         });
     
@@ -41,6 +75,7 @@ router.post("/add-podcast", authMiddleware, upload , async (req,res) => {
         });
         res.status(201).json({message : "Podcast added successfully"})
     } catch (error) {
+        console.error("Cloudinary upload failed:", error);
         return res.status(500).json({message: "Failed to add Podcast"})
     }
 });

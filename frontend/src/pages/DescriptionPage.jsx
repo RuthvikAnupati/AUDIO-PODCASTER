@@ -19,7 +19,7 @@ const DescriptionPage = () => {
         {Podcasts && (
             <>
             <div className='w-2/6 flex items-center justify-center md:justify-start md:items-start'>
-                <img src={`${BACKEND_URL}/${Podcasts.frontImage}`} alt="/" 
+                <img src={Podcasts.frontImage.startsWith("http") ? Podcasts.frontImage : `${BACKEND_URL}/${Podcasts.frontImage}`} alt="/" 
                 className='rounded w-full h-[50vh] object-cover'/>
             </div>
             <div className="w-4/6 ">

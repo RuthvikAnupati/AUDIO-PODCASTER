@@ -12,8 +12,8 @@ const PodcastCard = ({ items }) => {
         if (isLoggedIn) {
             e.preventDefault();
             dispatch(playerActions.setDiv());
-            dispatch(playerActions.changeImage(`${BACKEND_URL}/${items.frontImage}`));
-            dispatch(playerActions.changeSong(`${BACKEND_URL}/${items.audioFile}`));
+            dispatch(playerActions.changeImage(items.frontImage.startsWith("http") ? items.frontImage : `${BACKEND_URL}/${items.frontImage}`));
+            dispatch(playerActions.changeSong(items.audioFile.startsWith("http") ? items.audioFile : `${BACKEND_URL}/${items.audioFile}`));
         }
     };
 
@@ -22,7 +22,7 @@ const PodcastCard = ({ items }) => {
             <Link to={`/description/${items._id}`} 
                 className='border p-4 rounded flex flex-col shadow-xl hover:shadow-2xl transition-all duration-300'>
                 <div>
-                    <img src={`${BACKEND_URL}/${items.frontImage}`} className='rounded size-[42vh] object-cover'/>
+                    <img src={items.frontImage.startsWith("http") ? items.frontImage : `${BACKEND_URL}/${items.frontImage}`} className='rounded size-[42vh] object-cover'/>
                 </div>
                 <div className="mt-2 text-xl font-bold">
                     {items.title.length > 20 ? `${items.title.slice(0, 20)}...` : items.title}
